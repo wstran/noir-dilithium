@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "lib",
+    "bench/r3_verify_prepared",
+    "bench/r3_verify",
+    "bench/r3_prepare_key",
+    "bench/r3_key_commitment",
+    "bench/mldsa65_verify_prepared",
+    "bench/mldsa65_verify",
+    "bench/mldsa65_prepare_key",
+]
+default-member = "lib"

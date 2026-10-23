@@ -1,0 +1,6 @@
+[package]
+name = "dilithium"
+type = "lib"
+authors = ["wstran"]
+
+[dependencies]

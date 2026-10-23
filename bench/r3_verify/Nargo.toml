@@ -1,0 +1,7 @@
+[package]
+name = "r3_verify"
+type = "bin"
+authors = [""]
+
+[dependencies]
+dilithium = { path = "../../lib" }

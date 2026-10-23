@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Install nargo 1.0.0-rc.6
+        run: |
+          mkdir -p "$HOME/.nargo/bin"
+          curl -sSL -o "$RUNNER_TEMP/nargo.tar.gz" https://github.com/noir-lang/noir/releases/download/v1.0.0-rc.6/noir-x86_64-unknown-linux-gnu.tar.gz
+          echo "f315ee6e7a77a780ea029905b3a62be42ccd5c7fc137a99f69e60247d89b33e7  $RUNNER_TEMP/nargo.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/nargo.tar.gz" -C "$HOME/.nargo/bin"
+          echo "$HOME/.nargo/bin" >> "$GITHUB_PATH"
+
+      - name: Unit tests and all vector suites (unconstrained)
+        run: scripts/test.sh
+
+      - name: Malformed, prepared-key and edge suites (constrained)
+        run: CONSTRAINED=1 SUITES="malformed prepared edge" scripts/test.sh
+
+      - name: Type-check the workspace
+        run: nargo check --workspace
